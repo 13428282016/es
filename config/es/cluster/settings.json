@@ -1,0 +1,4 @@
+{
+  "cluster.indices.close.enable":false,
+  "action.auto_create_index":false
+}

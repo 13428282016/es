@@ -1,0 +1,443 @@
+/*
+    PUT ttkk
+
+
+*/
+{
+  "settings": {
+    "number_of_shards": 6,
+    "number_of_replicas": 1,
+    "index.mapping.total_fields.limit": 1000,
+    "index.mapping.depth.limit": 100,
+    "index.mapping.nested_fields.limit": 50,
+    "index.write.wait_for_active_shards": 2,
+    "index.refresh_interval": "1s",
+    "analysis": {
+      "analyzer": {
+        "ttkk_english": {
+          "type": "custom",
+          "tokenizer": "classic",
+          "filter": [
+            "lowercase",
+            "ttkk_synonym",
+            "ttkk_ascii_folding",
+            "ttkk_word_delimiter",
+            "ttkk_truncate",
+            "ttkk_english_keywords",
+            "ttkk_stemmer"
+          ],
+          "char_filter": [
+            "html_strip"
+          ]
+        },
+        "ttkk_english_for_search": {
+          "type": "custom",
+          "tokenizer": "classic",
+          "filter": [
+            "lowercase",
+            "ttkk_truncate"
+          ],
+          "char_filter": [
+            "html_strip"
+          ]
+        },
+        "ttkk_chinese": {
+          "type": "custom",
+          "tokenizer": "ik_max_word",
+          "filter": [
+            "lowercase",
+            "ttkk_synonym",
+            "ttkk_truncate"
+          ],
+          "char_filter": [
+            "html_strip"
+          ]
+        },
+        "ttkk_chinese_for_search": {
+          "type": "custom",
+          "tokenizer": "ik_smart",
+          "filter": [
+            "lowercase",
+            "ttkk_truncate"
+          ],
+          "char_filter": [
+            "html_strip"
+          ]
+        },
+        "ttkk_whitespace": {
+          "type": "custom",
+          "tokenizer": "whitespace",
+          "filter": [
+            "lowercase"
+          ]
+        }
+      },
+      "filter": {
+        "ttkk_ascii_folding": {
+          "type": "asciifolding",
+          "preserve_original": true
+        },
+        "ttkk_word_delimiter": {
+          "type": "word_delimiter",
+          "generate_word_parts": true,
+          "generate_number_parts": true,
+          "catenate_numbers": true,
+          "catenate_all": true,
+          "split_on_case_change": true,
+          "preserve_original": true,
+          "split_on_numerics": true,
+          "stem_english_possessive": true,
+          "type_table": [
+          ],
+          "protected_words": [
+          ]
+        },
+        "ttkk_stemmer": {
+          "type": "stemmer",
+          "name": "english"
+        },
+        "ttkk_truncate": {
+          "type": "truncate",
+          "length": 32
+        },
+        "ttkk_synonym": {
+          "type": "synonym",
+          "synonyms_path": "synonym.txt",
+          "ignore_case": true,
+          "expand": true
+        },
+        "ttkk_english_keywords": {
+          "type": "keyword_marker",
+          "keywords": ["a"]
+        }
+      }
+    }
+  },
+  "aliases": {
+    "ttkk_for_search": {},
+    "ttkk_for_rollover": {}
+  },
+
+  "mappings": {
+    "movie": {
+      "properties": {
+        "title": {
+          "type": "text",
+          "analyzer": "ttkk_chinese",
+          "boost": 10,
+          "fielddata": true,
+          "include_in_all": true,
+          "index": true,
+          "index_options": "positions",
+          "norms": true,
+          "position_increment_gap": 100,
+          "store": false,
+          "search_analyzer": "ttkk_chinese_for_search",
+          "search_quote_analyzer": "ttkk_chinese_for_search",
+          "similarity": "classic",
+          "term_vector": "yes",
+          "fielddata_frequency_filter": {
+            "min": 0.001,
+            "max": 0.1,
+            "min_segment_size": 500
+          },
+          "eager_global_ordinals": false,
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "boost": 1,
+              "doc_values": true,
+              "eager_global_ordinals": false,
+              "ignore_above": 16,
+              "include_in_all": true,
+              "index": true,
+              "index_options": "docs",
+              "norms": true,
+              "store": false,
+              "similarity": "classic"
+            }
+          }
+        },
+        "title_py": {
+          "type": "text",
+          "analyzer": "ttkk_whitespace",
+          "boost": 10,
+          "fielddata": false,
+          "include_in_all": true,
+          "index": true,
+          "index_options": "positions",
+          "norms": true,
+          "position_increment_gap": 100,
+          "store": false,
+          "search_analyzer": "ttkk_whitespace",
+          "search_quote_analyzer": "ttkk_whitespace",
+          "similarity": "classic",
+          "term_vector": "yes",
+          "fielddata_frequency_filter": {
+            "min": 0.001,
+            "max": 0.1,
+            "min_segment_size": 500
+          },
+          "eager_global_ordinals": false,
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "boost": 1,
+              "doc_values": true,
+              "eager_global_ordinals": false,
+              "ignore_above": 16,
+              "include_in_all": true,
+              "index": true,
+              "index_options": "docs",
+              "norms": true,
+              "store": false,
+              "similarity": "classic"
+            }
+          }
+        },
+        "title_en": {
+          "type": "text",
+          "analyzer": "ttkk_english",
+          "boost": 10,
+          "fielddata": false,
+          "include_in_all": true,
+          "index": true,
+          "index_options": "positions",
+          "norms": true,
+          "position_increment_gap": 100,
+          "store": false,
+          "search_analyzer": "ttkk_english_for_search",
+          "search_quote_analyzer": "ttkk_english_for_search",
+          "similarity": "classic",
+          "term_vector": "yes",
+          "fielddata_frequency_filter": {
+            "min": 0.001,
+            "max": 0.1,
+            "min_segment_size": 500
+          },
+          "eager_global_ordinals": false,
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "boost": 1,
+              "doc_values": true,
+              "eager_global_ordinals": false,
+              "ignore_above": 16,
+              "include_in_all": true,
+              "index": true,
+              "index_options": "docs",
+              "norms": true,
+              "store": false,
+              "similarity": "classic"
+            }
+          }
+        },
+        "title_alias": {
+          "type": "text",
+          "analyzer": "ttkk_chinese",
+          "boost": 10,
+          "fielddata": true,
+          "include_in_all": true,
+          "index": true,
+          "index_options": "positions",
+          "norms": true,
+          "position_increment_gap": 100,
+          "store": false,
+          "search_analyzer": "ttkk_chinese_for_search",
+          "search_quote_analyzer": "ttkk_chinese_for_search",
+          "similarity": "classic",
+          "term_vector": "yes",
+          "fielddata_frequency_filter": {
+            "min": 0.001,
+            "max": 0.1,
+            "min_segment_size": 500
+          },
+          "eager_global_ordinals": false,
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "boost": 1,
+              "doc_values": true,
+              "eager_global_ordinals": false,
+              "ignore_above": 16,
+              "include_in_all": true,
+              "index": true,
+              "index_options": "docs",
+              "norms": true,
+              "store": false,
+              "similarity": "classic"
+            }
+          }
+        },
+        "directors": {
+          "type": "nested",
+          "dynamic": false,
+          "include_in_all": true,
+          "properties": {
+            "name": {
+              "type": "text",
+              "analyzer": "ttkk_chinese",
+              "boost": 10,
+              "fielddata": true,
+              "include_in_all": true,
+              "index": true,
+              "index_options": "positions",
+              "norms": true,
+              "position_increment_gap": 100,
+              "store": false,
+              "search_analyzer": "ttkk_chinese_for_search",
+              "search_quote_analyzer": "ttkk_chinese_for_search",
+              "similarity": "classic",
+              "term_vector": "yes",
+              "fielddata_frequency_filter": {
+                "min": 0.001,
+                "max": 0.1,
+                "min_segment_size": 500
+              },
+              "eager_global_ordinals": false,
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "boost": 1,
+                  "doc_values": true,
+                  "eager_global_ordinals": false,
+                  "ignore_above": 16,
+                  "include_in_all": true,
+                  "index": true,
+                  "index_options": "docs",
+                  "norms": true,
+                  "store": false,
+                  "similarity": "classic"
+                }
+              }
+            },
+            "id": {
+              "type": "integer",
+              "coerce": true,
+              "boost": 1,
+              "doc_values": true,
+              "ignore_malformed": false,
+              "include_in_all": true,
+              "index": true,
+              "store": false
+            }
+          }
+        },
+        "actors": {
+          "type": "nested",
+          "dynamic": false,
+          "include_in_all": true,
+          "properties": {
+            "name": {
+              "type": "text",
+              "analyzer": "ttkk_chinese",
+              "boost": 10,
+              "fielddata": true,
+              "include_in_all": true,
+              "index": true,
+              "index_options": "positions",
+              "norms": true,
+              "position_increment_gap": 100,
+              "store": false,
+              "search_analyzer": "ttkk_chinese_for_search",
+              "search_quote_analyzer": "ttkk_chinese_for_search",
+              "similarity": "classic",
+              "term_vector": "yes",
+              "fielddata_frequency_filter": {
+                "min": 0.001,
+                "max": 0.1,
+                "min_segment_size": 500
+              },
+              "eager_global_ordinals": false,
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "boost": 1,
+                  "doc_values": true,
+                  "eager_global_ordinals": false,
+                  "ignore_above": 16,
+                  "include_in_all": true,
+                  "index": true,
+                  "index_options": "docs",
+                  "norms": true,
+                  "store": false,
+                  "similarity": "classic"
+                }
+              }
+            },
+            "id": {
+              "type": "integer",
+              "coerce": true,
+              "boost": 1,
+              "doc_values": true,
+              "ignore_malformed": false,
+              "include_in_all": true,
+              "index": true,
+              "store": false
+            }
+          }
+        },
+        "type": {
+          "type": "keyword",
+          "boost": 1,
+          "doc_values": true,
+          "eager_global_ordinals": false,
+          "fields": {
+          },
+          "ignore_above": 16,
+          "include_in_all": true,
+          "index": true,
+          "index_options": "docs",
+          "norms": true,
+          "store": false,
+          "similarity": "classic"
+        },
+        "type_id": {
+          "type": "byte",
+          "coerce": true,
+          "boost": 1,
+          "doc_values": true,
+          "ignore_malformed": false,
+          "include_in_all": true,
+          "index": true,
+          "store": false
+        },
+        "is_display": {
+          "type": "boolean",
+          "index": true,
+          "doc_values": true,
+          "boost": 1,
+          "store": false
+        },
+        "updated_at": {
+          "type": "date",
+          "format": "epoch_millis||yyy-MM-dd HH:mm:ss||yyyy-MM-dd||strict_date_optional_time",
+          "ignore_malformed": false,
+          "include_in_all": true,
+          "index": true,
+          "store": false,
+          "boost": 1
+        },
+        "ext": {
+          "type": "object",
+          "dynamic": true,
+          "enabled": false,
+          "include_in_all": true
+        }
+      }
+    },
+    "sub_movie": {
+      "_parent":{
+        "type":"movie"
+      }
+    },
+    "video": {
+    },
+    "user": {
+    },
+    "article": {
+    },
+    "person": {
+    }
+  }
+}

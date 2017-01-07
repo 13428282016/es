@@ -1,0 +1,34 @@
+{
+  "title": "火之女神井儿（漂亮）",
+  "title_py": "huo zhi nv shen jin er huozhinvshenjiner",
+  "title_en": "Goddess of fire jeongi",
+  "title_alias": [
+    "god",
+    "fire",
+    "jeongi"
+  ],
+  "directors": [
+    {
+      "id": 1,
+      "name": "卜成珠"
+    }
+  ],
+  "actors": [
+    {
+      "id": 1,
+      "name": "文瑾莹"
+    },
+    {
+      "id": 2,
+      "name": "李尚允"
+    }
+  ],
+  "type": "movie",
+  "type_id": 1,
+  "updated_at": "2017-04-02",
+  "is_display": true,
+  "ext": {
+    "info": {
+    }
+  }
+}
