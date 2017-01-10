@@ -30,5 +30,21 @@
   "ext": {
     "info": {
     }
+  },
+  "suggest": {
+    "input": [
+      "火之女神井儿（漂亮）",
+      "huo zhi nv shen jin er huozhinvshenjiner",
+      "Goddess of fire jeongi",
+      "火之女神井儿",
+      "god",
+      "fire",
+      "jeongi"
+    ],
+    "contexts": {
+      "type": [
+        "movie"
+      ]
+    }
   }
 }

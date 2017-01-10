@@ -1,8 +1,4 @@
-/*
-    PUT ttkk
 
-
-*/
 {
   "settings": {
     "number_of_shards": 6,
@@ -24,7 +20,8 @@
             "ttkk_word_delimiter",
             "ttkk_truncate",
             "ttkk_english_keywords",
-            "ttkk_stemmer"
+            "ttkk_stemmer",
+            "ttkk_phrase_spell_collect"
           ],
           "char_filter": [
             "html_strip"
@@ -47,7 +44,9 @@
           "filter": [
             "lowercase",
             "ttkk_synonym",
+            "ttkk_phrase_spell_collect",
             "ttkk_truncate"
+
           ],
           "char_filter": [
             "html_strip"
@@ -109,6 +108,14 @@
         "ttkk_english_keywords": {
           "type": "keyword_marker",
           "keywords": ["a"]
+        },
+        "ttkk_phrase_spell_collect":{
+
+            "type": "shingle",
+            "min_shingle_size": 2,
+            "max_shingle_size": 3
+
+
         }
       }
     }
@@ -121,6 +128,21 @@
   "mappings": {
     "movie": {
       "properties": {
+        "suggest":{
+            "type":"completion",
+            "preserve_separators":true,
+             "preserve_position_increments":true,
+            "max_input_length":50,
+            "contexts":[
+              {
+                "name":"type",
+                "type":"category"
+              }
+
+            ]
+
+
+        },
         "title": {
           "type": "text",
           "analyzer": "ttkk_chinese",
@@ -128,7 +150,7 @@
           "fielddata": true,
           "include_in_all": true,
           "index": true,
-          "index_options": "positions",
+          "index_options": "offsets",
           "norms": true,
           "position_increment_gap": 100,
           "store": false,
@@ -165,7 +187,7 @@
           "fielddata": false,
           "include_in_all": true,
           "index": true,
-          "index_options": "positions",
+          "index_options": "offsets",
           "norms": true,
           "position_increment_gap": 100,
           "store": false,
@@ -202,7 +224,7 @@
           "fielddata": false,
           "include_in_all": true,
           "index": true,
-          "index_options": "positions",
+          "index_options": "offsets",
           "norms": true,
           "position_increment_gap": 100,
           "store": false,
@@ -239,7 +261,7 @@
           "fielddata": true,
           "include_in_all": true,
           "index": true,
-          "index_options": "positions",
+          "index_options": "offsets",
           "norms": true,
           "position_increment_gap": 100,
           "store": false,
@@ -281,7 +303,7 @@
               "fielddata": true,
               "include_in_all": true,
               "index": true,
-              "index_options": "positions",
+              "index_options": "offsets",
               "norms": true,
               "position_increment_gap": 100,
               "store": false,
@@ -335,7 +357,7 @@
               "fielddata": true,
               "include_in_all": true,
               "index": true,
-              "index_options": "positions",
+              "index_options": "offsets",
               "norms": true,
               "position_increment_gap": 100,
               "store": false,
